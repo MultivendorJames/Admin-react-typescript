@@ -10,7 +10,7 @@ const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 const Traffic = lazy(()=> import('../pages/Traffic'))
 const Users = lazy(()=> import('../pages/User-management'))
-const Events = lazy(()=> import('../pages/Event-management'))
+const Payout = lazy(()=> import('../pages/Payout-management'))
 
 const coreRoutes = [
   {
@@ -69,9 +69,9 @@ const coreRoutes = [
     component: Users,
   },
   {
-    path: 'event-management',
-    title: 'Events',
-    component: Events,
+    path: 'payout-management',
+    title: 'Payout',
+    component: Payout,
   },
 ];
 
