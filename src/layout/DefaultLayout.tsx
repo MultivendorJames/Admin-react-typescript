@@ -1,10 +1,18 @@
-import { useState } from 'react';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import { Outlet } from 'react-router-dom';
+import { useState } from "react";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/auth/signin");
+  }
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
