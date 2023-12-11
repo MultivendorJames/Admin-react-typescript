@@ -3,20 +3,19 @@ import { Link } from "react-router-dom";
 // import Logo from '../../images/logo/logo.png';
 import { useState } from "react";
 import { post } from "../../utils/apiClient";
-import { useMutation } from "react-query";
 import img from "../../images/brand/multi-vendor-ecommerce-website-removebg-preview.png";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-interface postDateType {
+interface signData {
   email: string;
   password: string;
 }
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [enteredValue, setEenteredValue] = useState<postDateType>({
+  const [enteredValue, setEenteredValue] = useState<signData>({
     email: "",
     password: "",
   });
@@ -29,22 +28,6 @@ const SignIn = () => {
     setEenteredValue({ ...enteredValue, [e.target.name]: value });
   };
 
-  // const handleLogin = async () => {
-  //   axios.post("/users/login", enteredValue, {}).then((res)=>{
-  //     console.log(res);
-
-  //   })
-  // };
-
-  // const { mutate } = useMutation(handleLogin, {
-  //   onSuccess: (res) => {
-  //     console.log(res);
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //   },
-  // });
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -53,26 +36,22 @@ const SignIn = () => {
     }
 
     setIsLoading(true);
-    axios
-      .post("https://techstar-backend.onrender.com/users/login", enteredValue)
+
+    post("/users/login", enteredValue)
       .then((data) => {
         setIsLoading(false);
         console.log(data);
 
-        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("token", data.token);
 
         navigate("/");
       })
-
-      
 
       .catch((error) => {
         setIsLoading(false);
         toast.error(`${error.response.data.error}`);
         console.log(error.response.data.error);
       });
-
-    
 
     // mutate(loginData);
   };
@@ -98,7 +77,7 @@ const SignIn = () => {
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <h2 className="mb-9 text-3xl font-bold text-boxdark-2 dark:text-white sm:text-title-xl2">
-                Sign In 
+                Sign In
               </h2>
 
               <form onSubmit={handleSubmit}>
@@ -175,7 +154,7 @@ const SignIn = () => {
 
                 <div className="mb-5">
                   <input
-                  disabled={isLoading}
+                    disabled={isLoading}
                     type="submit"
                     value={!isLoading ? "Sign In" : "Signing in..."}
                     className="w-full cursor-pointer rounded-lg border bg-brandColor p-4 text-white transition hover:bg-opacity-90"

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Loader from "../../common/Loader";
 import { get } from "../../utils/apiClient";
 import { useQuery } from "react-query";
@@ -43,14 +44,24 @@ interface productData {
 }
 
 const filter_data = [
-  { label: "Filter by Amount", value: "" },
-  { label: "Filter by Category", value: "" },
+  { label: "Filter by Price", value: "price" },
+  { label: "Filter by Category", value: "category" },
 ];
 export default function Products() {
-
+  const [isEnteredValue, setIsEnteredItem] = useState<string>("");
+   const [enteredDropDownValue, setEnteredDropDownValue] = useState<string>("");
   const getProducts = () => {
     const res = get("/products");
     return res;
+  };
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setIsEnteredItem(value);
+
+    console.log(isEnteredValue);
+    
   };
 
   const { data, isLoading, isError } = useQuery("products", getProducts);
@@ -62,24 +73,30 @@ export default function Products() {
     return <p>Something went wrong!</p>;
   }
 
-  console.log(data);
+  
 
   return (
     <div>
-      <form className="flex items-center gap-4 mb-9" action="">
+      <form className="flex items-center gap-4 mb-2 bg-white p-6 rounded-md" action="">
         <div>
           <select
             className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
-            name=""
-            id=""
+            
+            onChange={(e)=> {setEnteredDropDownValue(e.target.value)
+            console.log(enteredDropDownValue);
+            
+            }}
+            value={enteredDropDownValue}
           >
             {filter_data.map((item) => (
-              <option value="">{item.label}</option>
+              <option value={item.value}>{item.label}</option>
             ))}
           </select>
         </div>
         <div className="w-[50%]">
           <input
+            value={isEnteredValue}
+            onChange={handleOnchange}
             className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-md"
             type="text"
             name=""
@@ -89,7 +106,9 @@ export default function Products() {
         </div>
       </form>
       <div>
-        {data?.data.map((item: productData) => (
+        {data.data.filter((product)=> {
+          return isEnteredValue.toLowerCase() === "" ? product : product.name.toLowerCase().includes(isEnteredValue) 
+        }).map((item: productData) => (
           <div
             key={item._id}
             className="bg-white dark:bg-boxdark border border-brandColor rounded-md  my-4 p-5"
@@ -137,6 +156,8 @@ export default function Products() {
             </div>
           </div>
         ))}
+
+        {data && data.data.length === 0 && <p>No data found!</p> }
       </div>
     </div>
   );

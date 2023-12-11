@@ -3,6 +3,7 @@ import Loader from "../../common/Loader";
 
 import { get } from "../../utils/apiClient";
 import { useQuery } from "react-query";
+import { useState } from "react";
 
 interface userData {
   balance: 0;
@@ -14,7 +15,15 @@ interface userData {
   _id: string;
 }
 
+const filter_data = [
+  { label: "Filter by Verified", value: "verifed" },
+  { label: "Filter by Role", value: "role" },
+];
+
 const Users = () => {
+
+  const [isEnteredValue, setIsEnteredItem] = useState<string>("");
+  const [enteredDropDownValue, setEnteredDropDownValue] = useState<string>("");
   const getUsers = () => {
     const res = get("/users");
     return res;
@@ -33,6 +42,14 @@ const Users = () => {
       console.log(_id);
     };
 
+    const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+
+      setIsEnteredItem(value);
+
+      console.log(isEnteredValue);
+    };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -49,6 +66,33 @@ const Users = () => {
             </div> */}
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <form className="flex items-center gap-4 mb-9" action="">
+          <div>
+            <select
+              className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
+              onChange={(e) => {
+                setEnteredDropDownValue(e.target.value);
+                console.log(enteredDropDownValue);
+              }}
+              value={enteredDropDownValue}
+            >
+              {filter_data.map((item) => (
+                <option value={item.value}>{item.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[50%]">
+            <input
+              value={isEnteredValue}
+              onChange={handleOnchange}
+              className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-md"
+              type="text"
+              name=""
+              id=""
+              placeholder="Search users"
+            />
+          </div>
+        </form>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -75,7 +119,9 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.users.map((user: userData) => (
+              {data?.users.filter((item)=> {
+                return isEnteredValue.toLowerCase() === "" ? item : item.name.toLowerCase().includes(isEnteredValue)
+              }).map((user: userData) => (
                 <tr key={user._id}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
@@ -100,14 +146,20 @@ const Users = () => {
                   </td>
 
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className={`inline-flex rounded-full   py-1 px-3 text-sm font-medium text-white  ${user.verified === true ? "bg-success" : "bg-danger"}`}>
+                    <p
+                      className={`inline-flex rounded-full   py-1 px-3 text-sm font-medium text-white  ${
+                        user.verified === true ? "bg-success" : "bg-danger"
+                      }`}
+                    >
                       {user.verified === true ? "Yes" : "No"}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                      <button onClick={()=> handleViewUser(user._id)
-                      } className="hover:text-primary">
+                      <button
+                        onClick={() => handleViewUser(user._id)}
+                        className="hover:text-primary"
+                      >
                         <svg
                           className="fill-current"
                           width="18"
@@ -126,7 +178,10 @@ const Users = () => {
                           />
                         </svg>
                       </button>
-                      <button onClick={()=> handleDeleteUser(user._id)} className="hover:text-primary">
+                      <button
+                        onClick={() => handleDeleteUser(user._id)}
+                        className="hover:text-primary"
+                      >
                         <svg
                           className="fill-current"
                           width="18"

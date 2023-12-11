@@ -19,7 +19,7 @@ const DropdownUser = () => {
 
   const {data, isError} = useQuery("user", getUser)
 
-  console.log(data);
+
   
 
   // close on click outside

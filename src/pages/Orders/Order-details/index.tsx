@@ -24,20 +24,22 @@ export default function orderDetails() {
   };
 
   const { data, isLoading:orderDetailsIsLoading } = useQuery("singeOrder", getOrder);
-  console.log(data);
+
   
 
 const handleUpdateStatus = async (_id:string)=> {
   setIsLoading(true)
 
- await put(`/orders/${_id}/status`, {
+ await put(`/orders/${id}/status`, {
   productId: _id,
     status: "shipped"
   })
 
   .then((res)=> {
     setIsLoading(false)
-    console.log(res);
+    if(res.success === true){
+      toast.success("Order Updated!")
+    }
     
   })
 
@@ -47,7 +49,7 @@ const handleUpdateStatus = async (_id:string)=> {
     
   })
   
-
+setIsLoading(false)
 }
 
   if(orderDetailsIsLoading){
@@ -56,16 +58,17 @@ const handleUpdateStatus = async (_id:string)=> {
 
   return (
     <div>
-      <div className="">
-        <div className="mb-5">
+      <div className="bg-white dark:bg-boxdark p-5 rounded-md">
+        <div className="mb-5 ">
           <h1 className="font-semibold mb-5 text-2xl">📦 ORDER DETAILS</h1>
           <h6 className="mb-2">Payment method: {data?.paymentMethod}</h6>
           {/* <h6 className="mb-2">Payment id: {data?.paymentId}</h6> */}
           <h6 className="mb-2">Order id: {data?.orderId}</h6>
           <h6>Total Amount: ${data?.total}</h6>
         </div>
+        <hr className="my-2 broder border-[#cccccc7a]" />
 
-        <div className="mb-5">
+        <div className="mb-5  ">
           <h2 className="font-semibold text-xl mb-3">🚚 Delivery Address:</h2>
           <p className="mb-2">{data.deliveryAddress.address}</p>
           <p className="mb-2">{data.deliveryAddress.city}</p>
@@ -75,23 +78,20 @@ const handleUpdateStatus = async (_id:string)=> {
           <p className="mb-2">{data.deliveryAddress.state}</p>
           <p>{data.deliveryAddress.email}</p>
         </div>
+        <hr className="my-2 broder border-[#cccccc7a]" />
 
         <div className="">
-          <h3 className="text-xl font-semibold">Items In this Order:</h3>
+          <h3 className="text-2xl font-semibold">Items In this Order:</h3>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           {data?.products.map((item) => (
             <div
               key={item._id}
-              className="bg-white rounded-md dark:bg-boxdark flex flex-col  md:items-center gap-3  my-4 px-2 py-3"
+              className=" rounded-md dark:bg-boxdark  gap-3  my-4 px-1  py-6"
             >
               <div className="mb-5">
-                <img
-                  className=" w-full  md:w-[200px] "
-                  src={item.image}
-                  alt=""
-                />
+                <img className=" w-full   " src={item.image} alt="" />
               </div>
 
               <div className="p-0">
@@ -102,7 +102,7 @@ const handleUpdateStatus = async (_id:string)=> {
                   <h5
                     className={` { ${
                       item.status === "received"
-                        ? "text-warning"
+                        ? "text-success"
                         : "text-danger"
                     }  `}
                   >
