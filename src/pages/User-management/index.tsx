@@ -76,8 +76,8 @@ const Users = () => {
               }}
               value={enteredDropDownValue}
             >
-              {filter_data.map((item) => (
-                <option value={item.value}>{item.label}</option>
+              {filter_data.map((item, i) => (
+                <option key={i} value={item.value}>{item.label}</option>
               ))}
             </select>
           </div>
@@ -119,7 +119,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.users.filter((item)=> {
+              {data?.users.filter((item:userData)=> {
                 return isEnteredValue.toLowerCase() === "" ? item : item.name.toLowerCase().includes(isEnteredValue)
               }).map((user: userData) => (
                 <tr key={user._id}>

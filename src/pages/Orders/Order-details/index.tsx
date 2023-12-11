@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { get, put } from "../../../utils/apiClient";
 import { characterLimit } from "../../../utils/charaterLimit";
@@ -8,14 +7,25 @@ import Loader from "../../../common/Loader";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
+interface seller {
+  email: string;
+  name: string;
+  _id: string;
+}
+interface productData {
+  name: string;
+  quantity: number;
+  price: number;
+  status: string;
+  _id: string;
+  image: string;
+  seller: seller;
+}
 export default function orderDetails() {
-
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const param = useParams();
 
   const { id } = param;
-
-  console.log(id);
 
   const getOrder = () => {
     const res = get(`/orders/${id}`);
@@ -23,37 +33,35 @@ export default function orderDetails() {
     return res;
   };
 
-  const { data, isLoading:orderDetailsIsLoading } = useQuery("singeOrder", getOrder);
+  const { data, isLoading: orderDetailsIsLoading } = useQuery(
+    "singeOrder",
+    getOrder
+  );
 
-  
+  const handleUpdateStatus = async (_id: string) => {
+    setIsLoading(true);
 
-const handleUpdateStatus = async (_id:string)=> {
-  setIsLoading(true)
+    await put(`/orders/${id}/status`, {
+      productId: _id,
+      status: "shipped",
+    })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.success === true) {
+          toast.success("Order Updated!");
+        }
+      })
 
- await put(`/orders/${id}/status`, {
-  productId: _id,
-    status: "shipped"
-  })
+      .catch((error) => {
+        setIsLoading(false);
+        toast.error((error as any).response.data.error);
+      });
 
-  .then((res)=> {
-    setIsLoading(false)
-    if(res.success === true){
-      toast.success("Order Updated!")
-    }
-    
-  })
+    setIsLoading(false);
+  };
 
-  .catch((error)=> {
-    setIsLoading(false)
-  toast.error((error as any).response.data.error);
-    
-  })
-  
-setIsLoading(false)
-}
-
-  if(orderDetailsIsLoading){
-    return <Loader />
+  if (orderDetailsIsLoading) {
+    return <Loader />;
   }
 
   return (
@@ -85,7 +93,7 @@ setIsLoading(false)
         </div>
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-          {data?.products.map((item) => (
+          {data?.products.map((item: productData) => (
             <div
               key={item._id}
               className=" rounded-md dark:bg-boxdark  gap-3  my-4 px-1  py-6"

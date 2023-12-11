@@ -44,7 +44,7 @@ export default function Orders() {
      
       }
 
-      console.log(data);
+   
     
   return (
     <div>

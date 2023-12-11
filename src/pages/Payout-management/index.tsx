@@ -50,7 +50,7 @@ export default function Payout() {
     console.log("something went wrong");
   }
 
-  console.log(data);
+
 
   return (
     <div>

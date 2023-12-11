@@ -106,7 +106,7 @@ export default function Products() {
         </div>
       </form>
       <div>
-        {data.data.filter((product)=> {
+        {data.data.filter((product:productData)=> {
           return isEnteredValue.toLowerCase() === "" ? product : product.name.toLowerCase().includes(isEnteredValue) 
         }).map((item: productData) => (
           <div
