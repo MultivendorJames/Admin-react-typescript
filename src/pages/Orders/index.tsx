@@ -4,6 +4,8 @@ import { useQuery } from 'react-query';
 import Loader from '../../common/Loader';
 
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 
 interface customer {
@@ -20,35 +22,86 @@ interface orderData {
 
 }
 
+const filter_data = [
+  { label: " Verified", value: "verifed" },
+  { label: "Customer", value: "customer" },
+  { label: "Seller", value: "seller" },
+];
 
 export default function Orders() {
 
-      const getOrders = () => {
-        const res = get("/orders/all");
-        return res;
-      };
+  const [isEnteredItem, setIsEnteredItem] = useState<string>("");
+  // const [enteredDropDown, setEnteredDropDown] = useState<string>("");
 
-      const { data, isLoading, isError } = useQuery("orders", getOrders);
+  // 
+  const getOrders = () => {
+    const res = get("/orders/all");
+    return res;
+  };
 
-      if (isLoading) {
-       return (
-        <Loader />
-       )
-      }
-// let errorMesg:JSX.Element ;
-      if (isError) {
-   
-     return( <p className=''>
-        Something went wrong!
-      </p>)
-     
-      }
+  const { data, isLoading, isError } = useQuery("orders", getOrders);
 
-   
-    
+
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setIsEnteredItem(value);
+  };
+
+
+
+  // 
+
+    const handleDeleteOrder = (orderId: string) => {
+      toast.error("Oops this Operation is not yet Allowed...");
+      console.log(orderId);
+      
+    };
+  
+
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  // let errorMesg:JSX.Element ;
+  if (isError) {
+    return <p className="">Something went wrong!</p>;
+  }
+
   return (
     <div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <form
+          className="flex items-center gap-4 mb-2 bg-white p-6 rounded-md"
+          action=""
+        >
+          {/* <div>
+            <select
+              className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
+              onChange={(e) => {
+                setEnteredDropDown(e.target.value);
+                console.log(enteredDropDown);
+              }}
+              value={enteredDropDown}
+            >
+              {filter_data.map((item) => (
+                <option value={item.value}>{item.label}</option>
+              ))}
+            </select>
+          </div> */}
+          <div className="w-[50%]">
+            <input
+              value={isEnteredItem}
+              onChange={handleOnchange}
+              className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-full"
+              type="text"
+              name=""
+              id=""
+              placeholder="Search Order by id"
+            />
+          </div>
+        </form>
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -65,7 +118,7 @@ export default function Orders() {
                 </th>
 
                 <th className="py-4 px-4 font-medium text-white dark:text-white">
-                  Customer
+                  Buyer
                 </th>
 
                 <th className="py-4 px-4 font-medium text-white dark:text-white">
@@ -77,7 +130,11 @@ export default function Orders() {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((order:orderData) => (
+              {data.data.filter((item:orderData)=> {
+
+                return isEnteredItem === "" ? item : item.orderId.includes(isEnteredItem)
+
+              }).map((order: orderData) => (
                 <tr key={order._id}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
@@ -126,7 +183,10 @@ export default function Orders() {
                           </svg>
                         </button>
                       </Link>
-                      <button className="hover:text-primary">
+                      <button
+                        onClick={() => handleDeleteOrder(order.orderId)}
+                        className="hover:text-primary"
+                      >
                         <svg
                           className="fill-current"
                           width="18"
