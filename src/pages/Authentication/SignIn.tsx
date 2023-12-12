@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 // import Logo from '../../images/logo/logo.png';
 import { useState } from "react";
 import { post } from "../../utils/apiClient";
-import img from "../../images/brand/multi-vendor-ecommerce-website-removebg-preview.png";
+import img from "../../images/brand/logo.png";
 
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

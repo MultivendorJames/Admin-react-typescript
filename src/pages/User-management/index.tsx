@@ -3,7 +3,7 @@ import Loader from "../../common/Loader";
 
 import { get } from "../../utils/apiClient";
 import { useQuery } from "react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface userData {
   balance: 0;
@@ -16,20 +16,26 @@ interface userData {
 }
 
 const filter_data = [
-  { label: "Filter by Verified", value: "verifed" },
-  { label: "Filter by Role", value: "role" },
+  { label: " Verified", value: "verifed" },
+  { label: "Customer", value: "customer" },
+  { label: "Seller", value: "seller" },
 ];
 
 const Users = () => {
 
-  const [isEnteredValue, setIsEnteredItem] = useState<string>("");
-  const [enteredDropDownValue, setEnteredDropDownValue] = useState<string>("");
+  const [isEnteredItem, setIsEnteredItem] = useState<string>("");
+  const [enteredDropDown, setEnteredDropDown] = useState<string>("");
+
+  // Ftech data
+
   const getUsers = () => {
     const res = get("/users");
     return res;
   };
 
   const { data, isLoading, isError } = useQuery("users", getUsers);
+
+  // Edit user
 
   const handleViewUser = (_id:string)=> {
     toast.error('Oops this Operation is not yet Allowed...')
@@ -39,7 +45,7 @@ const Users = () => {
 
     const handleDeleteUser = (_id: string) => {
       toast.error("Oops this Operation is not yet Allowed...");
-      console.log(_id);
+     
     };
 
     const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +53,29 @@ const Users = () => {
 
       setIsEnteredItem(value);
 
-      console.log(isEnteredValue);
+    
     };
+
+
+// filter
+
+      const [userData, setUserData] = useState<null >(data?.users);
+     useEffect(() => {
+       (function () {
+         let result= data?.users.filter((e) => {
+           const value = "" + e.isEnteredItem[enteredDropDown];
+
+           return value?.toLowerCase()?.startsWith(isEnteredItem?.toLowerCase());
+         });
+
+         setUserData(result)
+       })();
+     }, [userData]);
+
+console.log(userData);
+
+
+    //  loading
 
   if (isLoading) {
     return <Loader />;
@@ -71,10 +98,10 @@ const Users = () => {
             <select
               className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
               onChange={(e) => {
-                setEnteredDropDownValue(e.target.value);
-                console.log(enteredDropDownValue);
+                setEnteredDropDown(e.target.value);
+                console.log(enteredDropDown);
               }}
-              value={enteredDropDownValue}
+              value={enteredDropDown}
             >
               {filter_data.map((item, i) => (
                 <option key={i} value={item.value}>{item.label}</option>
@@ -83,7 +110,7 @@ const Users = () => {
           </div>
           <div className="w-[50%]">
             <input
-              value={isEnteredValue}
+              value={isEnteredItem}
               onChange={handleOnchange}
               className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-md"
               type="text"
@@ -119,9 +146,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.users.filter((item:userData)=> {
-                return isEnteredValue.toLowerCase() === "" ? item : item.name.toLowerCase().includes(isEnteredValue)
-              }).map((user: userData) => (
+              {data.users.map((user: userData) => (
                 <tr key={user._id}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
