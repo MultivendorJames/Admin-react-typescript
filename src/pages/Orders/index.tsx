@@ -73,7 +73,7 @@ export default function Orders() {
     <div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <form
-          className="flex items-center gap-4 mb-2 bg-white p-6 rounded-md"
+          className="flex items-center gap-4 mb-2 bg-white dark:bg-meta-4 p-6 rounded-md"
           action=""
         >
           {/* <div>

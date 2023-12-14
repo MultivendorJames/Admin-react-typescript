@@ -77,8 +77,8 @@ export default function Products() {
 
   return (
     <div>
-      <form className="flex items-center gap-4 mb-2 bg-white p-6 rounded-md" action="">
-        <div>
+      <form className="flex items-center gap-4 mb-2 bg-white dark:bg-meta-4 p-6 rounded-md" action="">
+        {/* <div>
           <select
             className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
             
@@ -92,12 +92,12 @@ export default function Products() {
               <option value={item.value}>{item.label}</option>
             ))}
           </select>
-        </div>
+        </div> */}
         <div className="w-[50%]">
           <input
             value={isEnteredValue}
             onChange={handleOnchange}
-            className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-md"
+            className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-full"
             type="text"
             name=""
             id=""
@@ -124,7 +124,7 @@ export default function Products() {
               <h5>Quatity: {item.quantity}</h5>
             </div>
             <div className="mb-2">
-              <h5>Price: ${item.price}</h5>
+              <h5 className="text-brandColor">Price: ${item.price}</h5>
             </div>
             <div className="mb-2">
               <h5>SKU: {item.sku}</h5>
@@ -149,7 +149,7 @@ export default function Products() {
               <p>Varition:</p>
             </div>
             <div className="mb-2">
-              <h5>Views: {item.views}</h5>
+              <h5 className="text-brandColor"> 👀 Views: {item.views}</h5>
             </div>
             <div className="mb-2">
               <h5>weight: {item.weight}</h5>

@@ -59,20 +59,20 @@ const Users = () => {
 
 // filter
 
-      const [userData, setUserData] = useState<null >(data?.users);
-     useEffect(() => {
-       (function () {
-         let result= data?.users.filter((e) => {
-           const value = "" + e.isEnteredItem[enteredDropDown];
+//       const [userData, setUserData] = useState<null >(data?.users);
+//      useEffect(() => {
+//        (function () {
+//          let result= data?.users.filter((e) => {
+//            const value = "" + e.isEnteredItem[enteredDropDown];
 
-           return value?.toLowerCase()?.startsWith(isEnteredItem?.toLowerCase());
-         });
+//            return value?.toLowerCase()?.startsWith(isEnteredItem?.toLowerCase());
+//          });
 
-         setUserData(result)
-       })();
-     }, [userData]);
+//          setUserData(result)
+//        })();
+//      }, [userData]);
 
-console.log(userData);
+// console.log(userData);
 
 
     //  loading
@@ -94,7 +94,7 @@ console.log(userData);
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <form className="flex items-center gap-4 mb-9" action="">
-          <div>
+          {/* <div>
             <select
               className="px-5 py-2 rounded-md border bg-transparent border-brandColor outline-none  focus:ring-brandColor focus:ring-1"
               onChange={(e) => {
@@ -107,12 +107,12 @@ console.log(userData);
                 <option key={i} value={item.value}>{item.label}</option>
               ))}
             </select>
-          </div>
+          </div> */}
           <div className="w-[50%]">
             <input
               value={isEnteredItem}
               onChange={handleOnchange}
-              className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-md"
+              className="px-4 py-2 w-full  border outline-none bg-transparent border-brandColor focus:ring-brandColor focus:ring-1 rounded-full"
               type="text"
               name=""
               id=""
